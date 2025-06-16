@@ -4,15 +4,36 @@ import ProductDetails from "./ProductDetails";
 import { useMemo } from "react";
 import { formatCurrency } from "@/src/utils";
 import { createOrderAction } from "@/actions/create-order-action";
+import { OrderSchema } from "@/src/schema";
+import { toast } from "react-toastify";
 
 export default function OrderSummary() {
 
   const order = useStore((state) => state.order);
   const total = useMemo(() => order.reduce((total, item) => total + (item.quantity * item.price), 0), [order]);
-  const handleCreateOrder = () => {
-    console.log('Desde: handle create order');
+  
+  const handleCreateOrder = async(formData: FormData) => {
+    const data = {
+      name: formData.get('name'),
+    }
 
-    createOrderAction();
+    
+    const result = OrderSchema.safeParse(data);
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        toast.error(issue.message)      
+      })
+      return
+    }
+    
+
+    const response = await createOrderAction(data);
+
+    if(response?.errors) {
+      response.errors.forEach((issue) => {
+        toast.error(issue.message)
+      })
+    }
   }
 
   return (
@@ -44,6 +65,15 @@ export default function OrderSummary() {
             className="w-full mt-10 space-y-5"
             action={handleCreateOrder}
           >
+
+            <input
+              type="text"
+              placeholder="Ingresa tu nombre"
+              className="bg-white border border-gray-100 w-full p-2"
+              name="name"
+            />
+
+          
             <input 
               type="submit"
               className="py-2 rounded uppercase text-white bg-black w-full text-center cursor-pointer font-bold"
