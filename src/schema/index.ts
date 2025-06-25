@@ -12,5 +12,4 @@ export const OrderSchema = z.object({
         quantity: z.number(),
         subTotal: z.number(),
     })),    
-    
 });

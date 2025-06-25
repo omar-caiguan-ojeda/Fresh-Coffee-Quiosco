@@ -5,12 +5,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 async function main() {
     try {
+        // For PostgreSQL, TRUNCATE is used to clear tables and reset sequences.
+        await prisma.$executeRaw`TRUNCATE TABLE "Category", "Product", "Order", "OrderProduct" RESTART IDENTITY CASCADE;`;
+
         await prisma.category.createMany({
             data: categories
-        })
+        });
         await prisma.product.createMany({
             data: products
-        })  
+        });
     } catch (error) {
         console.log(error);
     }
