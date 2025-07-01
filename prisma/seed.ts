@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
     try {
         // For PostgreSQL, TRUNCATE is used to clear tables and reset sequences.
-        await prisma.$executeRaw`TRUNCATE TABLE "Category", "Product", "Order", "OrderProduct" RESTART IDENTITY CASCADE;`;
+        await prisma.$executeRaw`TRUNCATE TABLE "Category", "Product", "Order", "OrderProducts" RESTART IDENTITY CASCADE;`;
 
         await prisma.category.createMany({
             data: categories
