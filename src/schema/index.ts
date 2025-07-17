@@ -13,3 +13,9 @@ export const OrderSchema = z.object({
         subTotal: z.number(),
     })),    
 });
+
+export const OrderIdSchema =  z.object({
+    order_id: z.string()
+        .transform((value) => parseInt(value))
+        .refine(value => value > 0, { message: 'El id de la orden es invalido' }),
+})
