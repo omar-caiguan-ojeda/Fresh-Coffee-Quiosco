@@ -15,7 +15,7 @@ export const OrderSchema = z.object({
 });
 
 export const OrderIdSchema =  z.object({
-    order_id: z.string()
+    orderId: z.string()
         .transform((value) => parseInt(value))
         .refine(value => value > 0, { message: 'El id de la orden es invalido' }),
 })
