@@ -19,3 +19,10 @@ export const OrderIdSchema =  z.object({
         .transform((value) => parseInt(value))
         .refine(value => value > 0, { message: 'El id de la orden es invalido' }),
 })
+
+export const SearchSchema = z.object({
+    search: z.string()
+    .trim() 
+    .min(1, 'El campo de busqueda es obligatorio')
+    .max(50, 'El campo de busqueda debe tener menos de 50 caracteres')
+})
