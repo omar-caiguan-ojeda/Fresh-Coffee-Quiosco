@@ -26,3 +26,19 @@ export const SearchSchema = z.object({
     .min(1, 'El campo de busqueda es obligatorio')
     .max(50, 'El campo de busqueda debe tener menos de 50 caracteres')
 })
+
+export const ProductSchema = z.object({
+    name: z.string()
+        .trim()
+        .min(1, { message: 'El Nombre del Producto no puede ir vacio'}),
+    price: z.string()
+        .trim()
+        .transform((value) => parseFloat(value)) 
+        .refine((value) => value > 0, { message: 'Precio no válido' })
+        .or(z.number().min(1, {message: 'La Categoría es Obligatoria' })),
+    categoryId: z.string()
+        .trim()
+        .transform((value) => parseInt(value)) 
+        .refine((value) => value > 0, { message: 'La Categoría es Obligatoria' })
+        .or(z.number().min(1, {message: 'La Categoría es Obligatoria' })),
+})
