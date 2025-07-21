@@ -1,48 +1,8 @@
-// import ProductsTable from "@/components/products/ProductsTable";
-// import Heading from "@/components/ui/Heading";
-// import { prisma } from "@/src/lib/prisma";
-
-
-// async function getProducts (page: number, pageSize: number) {
-//   const skip = (page -1) * pageSize
-//   const products = await prisma.product.findMany({
-//     take: pageSize,
-//     skip,
-//     include: {
-//       category: true
-//     }
-//   })
-//   return products
-// }
-
-// export type ProductsWithCategory = Awaited<ReturnType<typeof getProducts>>
-
-// export default async function ProductsPage({searchParams}: {searchParams: { page: string }}) {
-//   const page = +searchParams.page || 1
-//   const pageSize = 10
-//   const products = await getProducts(page, pageSize)
-//   //console.log(products)
-
-//   return (
-//     <>
-//     <Heading>
-//         Administrar Productos
-//     </Heading>
-
-//     <ProductsTable 
-//       products={products}
-//     />
-    
-//     </>
-//   )
-// }
-
-
-
 import ProductsPagination from "@/components/products/ProductsPagination";
 import ProductsTable from "@/components/products/ProductsTable";
 import Heading from "@/components/ui/Heading";
 import { prisma } from "@/src/lib/prisma";
+import { redirect } from "next/navigation";
 
 async function productCount(){
   return await prisma.product.count()
@@ -73,7 +33,10 @@ export default async function ProductsPage({
   const sp = await searchParams;
   const pageParam = Array.isArray(sp.page) ? sp.page[0] : sp.page;
   const pageNum = parseInt(pageParam ?? "1", 10);
-  const page = Number.isFinite(pageNum) && pageNum > 0 ? pageNum : 1;
+  if (!Number.isFinite(pageNum) || pageNum < 1) {
+    redirect(`/admin/products?page=1`);
+  }
+  const page = pageNum;
 
   const pageSize = 10;
 
@@ -82,6 +45,8 @@ export default async function ProductsPage({
 
   const [ products, totalProducts ] = await Promise.all([productsData, totalProductsData]);  
   const totalPages = Math.ceil(totalProducts / pageSize);
+
+  if (page > totalPages) redirect(`/admin/products?page=${totalPages}`)
 
   return (
     <>
