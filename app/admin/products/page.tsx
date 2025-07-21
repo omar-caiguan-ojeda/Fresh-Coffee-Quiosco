@@ -81,8 +81,7 @@ export default async function ProductsPage({
   const totalProductsData = productCount();
 
   const [ products, totalProducts ] = await Promise.all([productsData, totalProductsData]);  
-
-  console.log(totalProducts);
+  const totalPages = Math.ceil(totalProducts / pageSize);
 
   return (
     <>
@@ -90,6 +89,7 @@ export default async function ProductsPage({
       <ProductsTable products={products} />
       <ProductsPagination
         page={page}
+        totalPages={totalPages}
       />
     </>
   );
