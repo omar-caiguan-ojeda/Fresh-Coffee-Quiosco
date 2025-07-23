@@ -1,8 +1,8 @@
 import { prisma } from "@/src/lib/prisma"
 
-export default async function GET() {
+export async function GET(req: Request) {
     const orders = await prisma.order.findMany({
-        take: 5,
+        take: 6,
         where: {
             orderReadyAt: {
                 not: null
