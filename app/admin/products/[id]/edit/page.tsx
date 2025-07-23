@@ -8,9 +8,8 @@ import GoBackButton from "@/components/ui/GoBackButton"
 
 async function getProductById(id: number) {
     const product = await prisma.product.findUnique({
-        where: {
-            id
-        }
+        where: { id },
+        include: { category: true }
     })
     if (!product) {
         notFound()
@@ -28,7 +27,14 @@ export default async function EditProductPage({params}: {params: {id: string}}) 
 
             <GoBackButton />
 
-            <EditProductForm>
+            <EditProductForm
+                product={{
+                  name: product.name,
+                  price: product.price,
+                  categoryId: product.categoryId,
+                  categoryName: product.category?.name || ''
+                }}
+            >
                 <ProductForm 
                     product={product}
                 />

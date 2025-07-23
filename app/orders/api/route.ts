@@ -2,7 +2,7 @@ import { prisma } from "@/src/lib/prisma"
 
 export async function GET(req: Request) {
     const orders = await prisma.order.findMany({
-        take: 6,
+        take: 4,
         where: {
             orderReadyAt: {
                 not: null
