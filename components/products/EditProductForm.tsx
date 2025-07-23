@@ -1,13 +1,16 @@
 'use client'
 
-import { createProductAction } from "@/actions/create-product-action"
 import { ProductSchema } from "@/src/schema"
 import { toast } from "react-toastify"
-import { useRouter } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
+import { updateProductAction } from "@/actions/update-product-action"
 
-export default function AddProductForm({ children }: { children: React.ReactNode }) {
+export default function EditProductForm({ children }: { children: React.ReactNode }) {
 
     const router = useRouter()
+    const params = useParams()
+    const id = +params.id!
+
     const handleSubmit = async (formData: FormData) => {
         const data = {
             name: formData.get('name'),
@@ -15,6 +18,7 @@ export default function AddProductForm({ children }: { children: React.ReactNode
             categoryId: formData.get('categoryId'),
             image: formData.get('image'),
         }
+
         const result = ProductSchema.safeParse(data)
         if (!result.success) {
             result.error.issues.forEach(issue => {
@@ -23,14 +27,15 @@ export default function AddProductForm({ children }: { children: React.ReactNode
             })
             return
         }
-        const response = await createProductAction(result.data)
+
+        const response = await updateProductAction(result.data, id)
         if (response?.errors) {
             response.errors.forEach(issue => {
                 toast.error(issue.message)
             })
             return
         }
-        toast.success("Producto creado exitosamente")
+        toast.success("Producto actualizado exitosamente")
         router.push('/admin/products')
     }
 
@@ -45,7 +50,7 @@ export default function AddProductForm({ children }: { children: React.ReactNode
                 <input 
                     type="submit" 
                     className="bg-indigo-600 hover:bg-indigo-800 text-white w-full mt-5 p-3 uppercase font-bold cursor-pointer"
-                    value="Registrar Producto"
+                    value="Guardar Cambios"
                 />
             </form>
         </div>

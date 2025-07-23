@@ -1,5 +1,3 @@
-// components/products/ProductCard.tsx
-
 import { formatCurrency } from "@/src/utils"
 import { Product } from "@prisma/client"
 import Image from "next/image"

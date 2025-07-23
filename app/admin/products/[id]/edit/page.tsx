@@ -1,10 +1,15 @@
+import EditProductForm from "@/components/products/EditProductForm"
+import ProductForm from "@/components/products/ProductForm"
+import Heading from "@/components/ui/Heading"
 import { prisma } from "@/src/lib/prisma"
-import { notFound, redirect } from "next/navigation"
+import { notFound } from "next/navigation"
+
+import GoBackButton from "@/components/ui/GoBackButton"
 
 async function getProductById(id: number) {
     const product = await prisma.product.findUnique({
         where: {
-            id //: parseInt(id)
+            id
         }
     })
     if (!product) {
@@ -19,7 +24,15 @@ export default async function EditProductPage({params}: {params: {id: string}}) 
     console.log(product)
     return (
         <div>
-            <h1>Editar Producto</h1>
+            <Heading>Editar Producto: {product.name}</Heading>
+
+            <GoBackButton />
+
+            <EditProductForm>
+                <ProductForm 
+                    product={product}
+                />
+            </EditProductForm>
         </div>
     )
 }
