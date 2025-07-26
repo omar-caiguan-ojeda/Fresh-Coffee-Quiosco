@@ -12,7 +12,7 @@ export default function OrderCard({ order }: OrderCardProps) {
     console.log("SERVIDOR!!!")
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isPending, startTransition] = useTransition();
+    const [isPending] = useTransition(); //startTransition
     const formRef = useRef<HTMLFormElement>(null);
 
     const handleCompleteOrder = () => {
