@@ -11,7 +11,6 @@ type ProductFormProps = {
 }
 
 export default async function ProductForm({ product }: ProductFormProps) {
-
     const categories = await getCategories()
 
     return (
